@@ -21,12 +21,15 @@ export class GeminiProvider implements Provider {
     this.baseUrl = options.baseUrl ?? 'https://generativelanguage.googleapis.com/v1beta';
   }
 
-  async complete({ prompt, model, temperature }: CompletionRequest): Promise<{ text: string }> {
+  async complete({ prompt, model, temperature, image }: CompletionRequest): Promise<{ text: string }> {
+    const parts: unknown[] = [{ text: prompt }];
+    if (image) parts.push({ inlineData: { mimeType: image.mimeType, data: image.data } });
+
     const res = await fetch(`${this.baseUrl}/models/${model}:generateContent?key=${this.apiKey}`, {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({
-        contents: [{ parts: [{ text: prompt }] }],
+        contents: [{ parts }],
         generationConfig: { temperature },
       }),
     });

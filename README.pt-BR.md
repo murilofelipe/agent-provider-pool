@@ -38,6 +38,20 @@ const result = await pool.complete('Extraia o exercício, séries, repetições 
 console.log(result.text, result.provider, result.model);
 ```
 
+### Visão (entrada de imagem)
+
+Passe uma `image` como segundo argumento — Gemini, OpenAI, Anthropic e
+Ollama (com modelo com visão, ex. `llava`) suportam. Groq e DeepSeek ainda
+não têm modelo com visão configurado e lançam um `Error` simples (não
+`QuotaExceededError`, então o pool nunca escalona pra frente de um provider
+que simplesmente não sabe fazer o trabalho) se você mandar uma imagem.
+
+```ts
+const result = await pool.complete('Quais exercícios aparecem nesta foto?', {
+  image: { data: imagemEmBase64, mimeType: 'image/png' },
+});
+```
+
 ## Por quê
 
 Cota de free tier de LLM é pequena, inconsistente entre provedores, e fácil

@@ -1,6 +1,10 @@
 import { QuotaExceededError, PoolExhaustedError } from './errors.js';
 import { QuotaStore } from './quota-store.js';
-import type { CompletionResult, ProviderRegistration } from './types.js';
+import type { CompletionImage, CompletionResult, ProviderRegistration } from './types.js';
+
+export interface CompleteOptions {
+  image?: CompletionImage;
+}
 
 export interface ProviderPoolOptions {
   /** Where quota usage persists across restarts. Defaults to
@@ -33,10 +37,14 @@ export class ProviderPool {
     return this;
   }
 
-  /** Runs `prompt` against the first non-exhausted (provider, model) pair,
-   * escalating on quota exhaustion (proactive or reactive) until one
-   * succeeds. Throws `PoolExhaustedError` when every pair is exhausted. */
-  async complete(prompt: string): Promise<CompletionResult> {
+  /** Runs `prompt` (and, optionally, an image) against the first
+   * non-exhausted (provider, model) pair, escalating on quota exhaustion
+   * (proactive or reactive) until one succeeds. Throws `PoolExhaustedError`
+   * when every pair is exhausted. A provider that can't handle the given
+   * `image` throws a plain `Error`, which propagates immediately -- that's
+   * a caller mistake (wrong provider for the job), not a reason to
+   * escalate. */
+  async complete(prompt: string, options: CompleteOptions = {}): Promise<CompletionResult> {
     for (const registration of this.registrations) {
       for (const modelConfig of registration.models) {
         if (this.quota.isExhausted(registration.name, modelConfig)) continue;
@@ -46,6 +54,7 @@ export class ProviderPool {
             prompt,
             model: modelConfig.model,
             temperature: modelConfig.temperature,
+            image: options.image,
           });
           this.quota.recordUsage(registration.name, modelConfig.model);
           return { text, provider: registration.name, model: modelConfig.model };

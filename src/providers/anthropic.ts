@@ -29,7 +29,14 @@ export class AnthropicProvider implements Provider {
     this.baseUrl = options.baseUrl ?? 'https://api.anthropic.com/v1';
   }
 
-  async complete({ prompt, model, temperature }: CompletionRequest): Promise<{ text: string }> {
+  async complete({ prompt, model, temperature, image }: CompletionRequest): Promise<{ text: string }> {
+    const content: unknown = image
+      ? [
+          { type: 'image', source: { type: 'base64', media_type: image.mimeType, data: image.data } },
+          { type: 'text', text: prompt },
+        ]
+      : prompt;
+
     const res = await fetch(`${this.baseUrl}/messages`, {
       method: 'POST',
       headers: {
@@ -41,7 +48,7 @@ export class AnthropicProvider implements Provider {
         model,
         temperature,
         max_tokens: MAX_TOKENS,
-        messages: [{ role: 'user', content: prompt }],
+        messages: [{ role: 'user', content }],
       }),
     });
 
