@@ -193,3 +193,15 @@ modo servidor. Spec completa: [issue #1](https://github.com/murilofelipe/agent-p
   deprecated desde a versão de protocolo 2026-07-28 — a integração com
   ferramentas de agente deve expor uma tool MCP normal que chama o
   provider direto, não depender de `sampling`.
+- **`GeminiProvider` manda a API key na query string** (`?key=...`), não
+  em header — achado do `security-reviewer` ao integrar com o
+  `fitness-web` (issue #167 de lá): query string tende a aparecer em log
+  de proxy/CDN onde header não apareceria. Google já suporta
+  `x-goog-api-key` como header — trocar quando for mexer no arquivo de
+  novo, sem urgência (é a própria chave do dono, não de terceiro).
+- **Corpo de erro de provider sem limite de tamanho** (`groq.ts`/`openai.ts`/
+  etc.: `` `... failed (${status}): ${await res.text()}` ``) — resposta de
+  erro de terceiro cai inteira na mensagem do `Error`, sem truncar. Baixo
+  risco (não é segredo, é corpo de resposta HTTP), mas pode inchar log
+  estruturado de quem consome. Truncar pra algo como 500 chars quando
+  alguém mexer nesses arquivos de novo.
