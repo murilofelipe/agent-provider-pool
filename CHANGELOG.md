@@ -3,6 +3,18 @@
 All notable changes to this project are documented here. Format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.4.0] - 2026-09-05
+
+### Fixed
+
+- `dist/` is now committed (no longer gitignored) and rebuilt as part of
+  every tagged release. A plain GitHub tarball URL install -- the only
+  option that doesn't need the `git` binary on the installing machine --
+  never triggers `scripts.prepare` (only a `git+` dependency does, and
+  that needs `git` for real). Since this package isn't on npm yet,
+  committed `dist/` is the only way a tarball-URL consumer gets something
+  that actually imports.
+
 ## [0.3.0] - 2026-09-05
 
 ### Fixed
