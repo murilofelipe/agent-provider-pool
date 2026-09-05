@@ -3,6 +3,17 @@
 All notable changes to this project are documented here. Format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.2.0] - 2026-09-05
+
+### Added
+
+- Vision (image) support: `CompletionRequest.image?: { data, mimeType }`
+  and `ProviderPool.complete(prompt, { image })`. `GeminiProvider`,
+  `OpenAIProvider`, `AnthropicProvider`, and `OllamaProvider` (with a
+  vision-capable model) all accept it. `GroqProvider` and `DeepSeekProvider`
+  throw a plain `Error` (never `QuotaExceededError`) if given an image,
+  since neither has a vision-capable model configured.
+
 ## [0.1.0] - 2026-09-05
 
 ### Added
