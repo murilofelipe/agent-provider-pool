@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+#
+# Local-only quality gate: lint + type-check + unit tests, run on every
+# push. There is deliberately NO GitHub Actions workflow in this repo --
+# a shared Actions quota got exhausted on another project before and
+# locked everything, so CI here stays entirely local.
+#
+# Emergency escape: git push --no-verify
+
+set -euo pipefail
+
+ROOT="$(git rev-parse --show-toplevel)"
+
+if ! (cd "$ROOT" && make check); then
+	echo "✗ Push recusado: rode 'make check' localmente pra ver o motivo (e 'make lint-fix' se for lint)." >&2
+	exit 1
+fi
+
+exit 0
