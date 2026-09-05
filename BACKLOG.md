@@ -77,11 +77,34 @@ modo servidor. Spec completa: [issue #1](https://github.com/murilofelipe/agent-p
     `make hooks` ativa, `make check` roda tudo, escape via `--no-verify`).
   - [x] Branches `main` + `develop` (git-flow).
 
+### 🎫 Story 1.4: Adapters pagos — OpenAI, Anthropic, DeepSeek ✅ [CONCLUÍDA]
+- **Descrição:** rede de segurança final da escada — pool com só providers
+  grátis/local (1.1-1.3) não tem "último recurso" de verdade: quando Groq,
+  Gemini e o Ollama local (se estiver rodando) se esgotam, `complete()`
+  lança `PoolExhaustedError` sem mais pra onde escalonar. Estes três
+  adapters entram tipicamente por ÚLTIMO na ordem de prioridade — só
+  chamados quando não sobra nada grátis. Spec completa:
+  [issue #2](https://github.com/murilofelipe/agent-provider-pool/issues/2).
+- **Não-Objetivos:** nenhuma mudança em `ProviderPool`/`QuotaStore` —
+  Story só adiciona adapters ao catálogo, mesma seam `Provider` de sempre.
+  Sem streaming, sem tracking de custo/orçamento (a cota continua sendo só
+  contagem de chamadas, não gasto em dinheiro).
+- **Complexidade:** Baixa | **Peso:** 3
+- **Justificativa do Peso:** mesmo raciocínio da Story 1.2 — chamadas HTTP
+  via `fetch` nativo, cada uma só traduzindo request/response; Anthropic
+  tem shape de request/response mais distinto (Messages API, blocos de
+  `content`) que OpenAI/DeepSeek (mesma família compatível com OpenAI,
+  igual Groq).
+- **Tarefas:**
+  - [x] `OpenAIProvider` (Chat Completions API) — [#3](https://github.com/murilofelipe/agent-provider-pool/issues/3), PR #7.
+  - [x] `AnthropicProvider` (Messages API, shape distinto) — [#4](https://github.com/murilofelipe/agent-provider-pool/issues/4), PR #8.
+  - [x] `DeepSeekProvider` (compatível com OpenAI) — [#5](https://github.com/murilofelipe/agent-provider-pool/issues/5), PR #9.
+  - [x] Testes de integração reais (opt-in) pros três, mesmo padrão das
+    Stories anteriores.
+  - [x] Tabela de providers dos dois READMEs atualizada.
+
 ## 🔭 Backlog futuro (fora do MVP, sem Peso ainda)
 
-- **Adapters pagos**: OpenAI, Anthropic, DeepSeek — mesma seam `Provider`,
-  entram como Stories independentes quando fizer sentido usá-los como
-  rede de segurança final da escada.
 - **Múltiplas credenciais por provider** (pool de chaves do MESMO provider,
   ex. 3 chaves Gemini free tier somando cota) — explicitamente adiado no
   MVP (issue #1).
