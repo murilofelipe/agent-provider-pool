@@ -68,8 +68,9 @@ provider's own model ladder before moving to the next provider.
 | [Gemini](https://ai.google.dev) | `GeminiProvider` | Google Generative Language API |
 | [Ollama](https://ollama.com) | `OllamaProvider` | Local server, no API key, no quota |
 | [OpenAI](https://platform.openai.com) | `OpenAIProvider` | Chat Completions API |
+| [Anthropic](https://www.anthropic.com) | `AnthropicProvider` | Messages API |
 
-Anthropic and DeepSeek adapters are planned — see `BACKLOG.md`.
+A DeepSeek adapter is planned — see `BACKLOG.md`.
 
 ## Testing your own code against this library
 

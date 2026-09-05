@@ -19,3 +19,5 @@ export { OllamaProvider } from './providers/ollama.js';
 export type { OllamaProviderOptions } from './providers/ollama.js';
 export { OpenAIProvider } from './providers/openai.js';
 export type { OpenAIProviderOptions } from './providers/openai.js';
+export { AnthropicProvider } from './providers/anthropic.js';
+export type { AnthropicProviderOptions } from './providers/anthropic.js';
