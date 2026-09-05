@@ -68,8 +68,9 @@ de um provider antes de passar pro próximo.
 | [Groq](https://groq.com) | `GroqProvider` | API de chat completions compatível com OpenAI |
 | [Gemini](https://ai.google.dev) | `GeminiProvider` | Google Generative Language API |
 | [Ollama](https://ollama.com) | `OllamaProvider` | Servidor local, sem API key, sem cota |
+| [OpenAI](https://platform.openai.com) | `OpenAIProvider` | API de Chat Completions |
 
-Adapters de OpenAI, Anthropic e DeepSeek estão planejados — ver `BACKLOG.md`.
+Adapters de Anthropic e DeepSeek estão planejados — ver `BACKLOG.md`.
 
 ## Testando seu próprio código contra esta biblioteca
 

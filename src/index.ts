@@ -17,3 +17,5 @@ export { GeminiProvider } from './providers/gemini.js';
 export type { GeminiProviderOptions } from './providers/gemini.js';
 export { OllamaProvider } from './providers/ollama.js';
 export type { OllamaProviderOptions } from './providers/ollama.js';
+export { OpenAIProvider } from './providers/openai.js';
+export type { OpenAIProviderOptions } from './providers/openai.js';

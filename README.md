@@ -67,8 +67,9 @@ provider's own model ladder before moving to the next provider.
 | [Groq](https://groq.com) | `GroqProvider` | OpenAI-compatible chat completions API |
 | [Gemini](https://ai.google.dev) | `GeminiProvider` | Google Generative Language API |
 | [Ollama](https://ollama.com) | `OllamaProvider` | Local server, no API key, no quota |
+| [OpenAI](https://platform.openai.com) | `OpenAIProvider` | Chat Completions API |
 
-OpenAI, Anthropic, and DeepSeek adapters are planned — see `BACKLOG.md`.
+Anthropic and DeepSeek adapters are planned — see `BACKLOG.md`.
 
 ## Testing your own code against this library
 
