@@ -69,8 +69,7 @@ provider's own model ladder before moving to the next provider.
 | [Ollama](https://ollama.com) | `OllamaProvider` | Local server, no API key, no quota |
 | [OpenAI](https://platform.openai.com) | `OpenAIProvider` | Chat Completions API |
 | [Anthropic](https://www.anthropic.com) | `AnthropicProvider` | Messages API |
-
-A DeepSeek adapter is planned — see `BACKLOG.md`.
+| [DeepSeek](https://www.deepseek.com) | `DeepSeekProvider` | OpenAI-compatible chat completions API |
 
 ## Testing your own code against this library
 

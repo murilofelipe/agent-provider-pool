@@ -70,8 +70,7 @@ de um provider antes de passar pro próximo.
 | [Ollama](https://ollama.com) | `OllamaProvider` | Servidor local, sem API key, sem cota |
 | [OpenAI](https://platform.openai.com) | `OpenAIProvider` | API de Chat Completions |
 | [Anthropic](https://www.anthropic.com) | `AnthropicProvider` | Messages API |
-
-Um adapter de DeepSeek está planejado — ver `BACKLOG.md`.
+| [DeepSeek](https://www.deepseek.com) | `DeepSeekProvider` | API de chat completions compatível com OpenAI |
 
 ## Testando seu próprio código contra esta biblioteca
 
