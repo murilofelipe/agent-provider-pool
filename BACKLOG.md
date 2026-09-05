@@ -141,13 +141,40 @@ modo servidor. Spec completa: [issue #1](https://github.com/murilofelipe/agent-p
   npm em instalações via git (mecanismo nativo do npm feito exatamente
   pra isso).
 - **Não-Objetivos:** não commitar `dist/` no repositório — o `prepare`
-  script é a correção certa, não um contorno.
+  script é a correção certa, não um contorno. **Superado pela Story 1.7**:
+  testando de ponta a ponta contra o `fitness-web`, `prepare` só dispara
+  pra dependência `git+`/atalho `usuário/repo#tag` — que por sua vez
+  EXIGE o binário `git` na máquina que instala (testado sem `git` no
+  `PATH`: falha na hora). Como o objetivo era justamente evitar essa
+  exigência (Alpine do `fitness-web` não tem `git`), o `prepare` sozinho
+  não resolve o caso de uso real — ver Story 1.7.
 - **Complexidade:** Baixa | **Peso:** 1
 - **Tarefas:**
   - [x] `"prepare": "npm run build"` em `package.json#scripts`.
   - [x] Verificado com uma instalação real via `git+file://` local,
     confirmando `dist/` sendo gerado e o pacote importando (`import()`)
     com todos os exports esperados.
+
+### 🎫 Story 1.7: `dist/` commitado — instalação via tarball simples funciona sem `git` ✅ [CONCLUÍDA]
+- **Descrição:** achado ao testar a Story 1.6 de ponta a ponta: uma URL de
+  tarball simples (`https://.../archive/refs/tags/vX.Y.Z.tar.gz`) —
+  necessária pra instalar sem o binário `git` (Alpine do `fitness-web`) —
+  **nunca** dispara `scripts.prepare` (só dependência `git+`/atalho
+  disparam, e essas exigem `git` de verdade, confirmado testando sem ele
+  no `PATH`). `dist/` deixa de ser gitignorado — vira diretório
+  normalmente versionado, reconstruído e commitado a cada release (skill
+  `/release`, passo 5b). Pode ficar levemente desatualizado em `develop`
+  entre releases — inofensivo, ninguém instala a partir do HEAD de
+  `develop`.
+- **Não-Objetivos:** `prepare` (Story 1.6) continua no `package.json` —
+  vira rede de segurança pra quem eventualmente instalar via `git+` com
+  `git` disponível, mesmo não sendo mais o caminho principal.
+- **Complexidade:** Baixa | **Peso:** 2
+- **Tarefas:**
+  - [x] `dist/` removido do `.gitignore`.
+  - [x] Skill `/release` ganha o passo 5b: `npm run build` + `git add
+    dist` antes do commit de release.
+  - [x] `dist/` commitado nesta Story, pronto pro próximo release.
 
 ## 🔭 Backlog futuro (fora do MVP, sem Peso ainda)
 

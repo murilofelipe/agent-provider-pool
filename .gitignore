@@ -1,5 +1,10 @@
 node_modules/
-dist/
+# dist/ IS committed (see BACKLOG.md Story 1.7 / .claude/skills/release):
+# this package isn't on npm yet, so a plain GitHub tarball URL install --
+# the only option that doesn't need the `git` binary on the installing
+# machine -- has no other way to get built output. Rebuilt + committed as
+# part of every tagged release; may go slightly stale between releases on
+# `develop`, which is fine since nobody installs from `develop`'s HEAD.
 .agent-provider-pool/
 .test-quota/
 *.log
