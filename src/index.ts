@@ -21,3 +21,5 @@ export { OpenAIProvider } from './providers/openai.js';
 export type { OpenAIProviderOptions } from './providers/openai.js';
 export { AnthropicProvider } from './providers/anthropic.js';
 export type { AnthropicProviderOptions } from './providers/anthropic.js';
+export { DeepSeekProvider } from './providers/deepseek.js';
+export type { DeepSeekProviderOptions } from './providers/deepseek.js';
