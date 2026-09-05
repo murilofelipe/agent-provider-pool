@@ -38,6 +38,20 @@ const result = await pool.complete('Extract the exercise name, sets, reps and we
 console.log(result.text, result.provider, result.model);
 ```
 
+### Vision (image input)
+
+Pass an `image` as the second argument — Gemini, OpenAI, Anthropic, and
+Ollama (with a vision-capable model, e.g. `llava`) all support it. Groq and
+DeepSeek don't have a vision-capable model configured yet and throw a plain
+`Error` (not `QuotaExceededError`, so the pool never escalates past a
+provider that simply can't do the job) if you send them an image.
+
+```ts
+const result = await pool.complete('What exercises are listed in this photo?', {
+  image: { data: base64EncodedImage, mimeType: 'image/png' },
+});
+```
+
 ## Why
 
 Free-tier LLM API quotas are small, inconsistent across providers, and easy

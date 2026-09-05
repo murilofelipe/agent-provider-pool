@@ -1,10 +1,11 @@
 export { ProviderPool } from './pool.js';
-export type { ProviderPoolOptions } from './pool.js';
+export type { ProviderPoolOptions, CompleteOptions } from './pool.js';
 export { QuotaExceededError, PoolExhaustedError } from './errors.js';
 export type {
   Provider,
   CompletionRequest,
   CompletionResult,
+  CompletionImage,
   ModelConfig,
   ProviderRegistration,
 } from './types.js';

@@ -103,6 +103,33 @@ modo servidor. Spec completa: [issue #1](https://github.com/murilofelipe/agent-p
     Stories anteriores.
   - [x] Tabela de providers dos dois READMEs atualizada.
 
+### 🎫 Story 1.5: Suporte a imagem (visão) no `CompletionRequest` ✅ [CONCLUÍDA]
+- **Descrição:** gap real descoberto ao voltar pro `fitness-web` (issue
+  #167, Fase 3): `Provider.complete()` só aceitava `prompt: string`, sem
+  jeito de mandar uma imagem pra um modelo de visão. `CompletionRequest`
+  ganha `image?: { data, mimeType }` opcional; `ProviderPool.complete()`
+  ganha um segundo argumento opcional `{ image }`.
+- **Não-Objetivos:** sem mudança na lógica de escada/failover/quota — a
+  imagem é só mais um campo do request, não afeta escalonamento nenhum.
+- **Complexidade:** Baixa | **Peso:** 3
+- **Justificativa do Peso:** mudança de tipo pequena + 4 adapters
+  ganhando o bloco de imagem no formato próprio de cada API (`inlineData`
+  no Gemini, `image_url` no OpenAI, bloco `image`/`source` no Anthropic,
+  `images: [base64]` no Ollama) — repetitivo, não complexo.
+- **Tarefas:**
+  - [x] `CompletionRequest.image`/`CompletionImage` (`src/types.ts`).
+  - [x] `ProviderPool.complete(prompt, { image })`.
+  - [x] `GeminiProvider`/`OpenAIProvider`/`AnthropicProvider`/`OllamaProvider`
+    passam a imagem quando presente.
+  - [x] `GroqProvider`/`DeepSeekProvider` lançam `Error` simples (nunca
+    `QuotaExceededError`) se receberem imagem — nenhum modelo configurado
+    tem visão; "não sei fazer isso" não é "tenta o próximo".
+  - [x] Testes unitários (passthrough de imagem, omissão quando ausente,
+    guarda de Groq/DeepSeek) + testes de integração reais (opt-in) pros 4
+    adapters com visão, usando um PNG 1x1 embutido no teste (sem fixture
+    binária nova versionada).
+  - [x] READMEs (EN + pt-BR) documentam o uso com imagem.
+
 ## 🔭 Backlog futuro (fora do MVP, sem Peso ainda)
 
 - **Múltiplas credenciais por provider** (pool de chaves do MESMO provider,

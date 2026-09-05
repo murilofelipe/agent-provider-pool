@@ -1,10 +1,21 @@
 /** A single completion request handed to whichever (provider, model) pair is
  * currently active. The pool decides `model`/`temperature`; the caller only
- * supplies the prompt. */
+ * supplies the prompt (and, optionally, an image). */
 export interface CompletionRequest {
   prompt: string;
   model: string;
   temperature: number;
+  /** Optional image input for vision-capable models. Omit for text-only
+   * requests. A provider/model that doesn't support vision should throw a
+   * plain `Error` (never `QuotaExceededError`) when it receives one --
+   * "can't do this" is not "try the next one". */
+  image?: CompletionImage;
+}
+
+export interface CompletionImage {
+  /** Base64-encoded image bytes -- no `data:` URL prefix. */
+  data: string;
+  mimeType: string;
 }
 
 export interface CompletionResult {
