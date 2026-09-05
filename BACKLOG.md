@@ -130,6 +130,25 @@ modo servidor. Spec completa: [issue #1](https://github.com/murilofelipe/agent-p
     binária nova versionada).
   - [x] READMEs (EN + pt-BR) documentam o uso com imagem.
 
+### 🎫 Story 1.6: `prepare` script — instalação via git/tarball funciona de verdade ✅ [CONCLUÍDA]
+- **Descrição:** achado real ao wire-ar este pacote no `fitness-web`
+  (issue #167, Story O.7b): `dist/` está no `.gitignore` (correto — não
+  se versiona build output), mas isso significa que instalar via URL de
+  tarball do GitHub ou dependência `git+` (única opção antes de publicar
+  no registry npm) baixava só o código-fonte, e `main`/`exports` do
+  `package.json` apontavam pra um `dist/` que não existia — o pacote
+  simplesmente não importava. `scripts.prepare` roda automaticamente pro
+  npm em instalações via git (mecanismo nativo do npm feito exatamente
+  pra isso).
+- **Não-Objetivos:** não commitar `dist/` no repositório — o `prepare`
+  script é a correção certa, não um contorno.
+- **Complexidade:** Baixa | **Peso:** 1
+- **Tarefas:**
+  - [x] `"prepare": "npm run build"` em `package.json#scripts`.
+  - [x] Verificado com uma instalação real via `git+file://` local,
+    confirmando `dist/` sendo gerado e o pacote importando (`import()`)
+    com todos os exports esperados.
+
 ## 🔭 Backlog futuro (fora do MVP, sem Peso ainda)
 
 - **Múltiplas credenciais por provider** (pool de chaves do MESMO provider,
