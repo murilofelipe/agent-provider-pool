@@ -69,8 +69,9 @@ de um provider antes de passar pro próximo.
 | [Gemini](https://ai.google.dev) | `GeminiProvider` | Google Generative Language API |
 | [Ollama](https://ollama.com) | `OllamaProvider` | Servidor local, sem API key, sem cota |
 | [OpenAI](https://platform.openai.com) | `OpenAIProvider` | API de Chat Completions |
+| [Anthropic](https://www.anthropic.com) | `AnthropicProvider` | Messages API |
 
-Adapters de Anthropic e DeepSeek estão planejados — ver `BACKLOG.md`.
+Um adapter de DeepSeek está planejado — ver `BACKLOG.md`.
 
 ## Testando seu próprio código contra esta biblioteca
 
