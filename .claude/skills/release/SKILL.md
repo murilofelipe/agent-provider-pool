@@ -102,6 +102,22 @@ This runs lint + type-check + unit tests (see `Makefile`) — must pass
 clean. There's no separate "build produces what deploy needs" concern here
 (no deploy); this is just the same gate every PR already has to pass.
 
+## 5b. Rebuild `dist/`
+
+`dist/` is a normally-tracked directory (not gitignored — see
+`BACKLOG.md` Story 1.7 for why: this package isn't on npm yet, and a
+plain GitHub tarball URL install, unlike a `git+` dependency, never
+triggers `scripts.prepare`, so committed build output is the only way a
+tarball-URL consumer gets something that actually imports). It can go
+slightly stale on `develop` between releases — harmless, since nobody
+installs from `develop`'s HEAD — but every tagged release rebuilds it
+fresh:
+
+```bash
+npm run build
+git add dist
+```
+
 ## 6. Explicit commit
 
 ```bash
