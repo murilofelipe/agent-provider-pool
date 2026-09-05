@@ -23,7 +23,11 @@ export class DeepSeekProvider implements Provider {
     this.baseUrl = options.baseUrl ?? 'https://api.deepseek.com/v1';
   }
 
-  async complete({ prompt, model, temperature }: CompletionRequest): Promise<{ text: string }> {
+  async complete({ prompt, model, temperature, image }: CompletionRequest): Promise<{ text: string }> {
+    // ponytail: no vision-capable DeepSeek model is wired up yet -- fail loud
+    // and specific rather than silently sending only the text half.
+    if (image) throw new Error(`DeepSeekProvider does not support image input (model ${model})`);
+
     const res = await fetch(`${this.baseUrl}/chat/completions`, {
       method: 'POST',
       headers: {

@@ -18,6 +18,26 @@ afterEach(() => {
 });
 
 describe('ProviderPool', () => {
+  it('passes an optional image through to the provider unchanged', async () => {
+    const fake = new FakeProvider();
+    const image = { data: 'ZmFrZS1pbWFnZS1ieXRlcw==', mimeType: 'image/png' };
+    await pool()
+      .addProvider({ name: 'gemini', provider: fake, models: [{ model: 'flash', temperature: 0.2 }] })
+      .complete('extract this', { image });
+
+    expect(fake.calls).toHaveLength(1);
+    expect(fake.calls[0]?.image).toEqual(image);
+  });
+
+  it('omits the image field entirely for a text-only call', async () => {
+    const fake = new FakeProvider();
+    await pool()
+      .addProvider({ name: 'groq', provider: fake, models: [{ model: 'simple', temperature: 0.2 }] })
+      .complete('hello');
+
+    expect(fake.calls[0]?.image).toBeUndefined();
+  });
+
   it('uses the first configured (provider, model) pair when nothing is exhausted', async () => {
     const fake = new FakeProvider();
     const result = await pool()

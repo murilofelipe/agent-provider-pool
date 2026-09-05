@@ -19,7 +19,7 @@ export class OllamaProvider implements Provider {
     this.baseUrl = options.baseUrl ?? 'http://localhost:11434';
   }
 
-  async complete({ prompt, model, temperature }: CompletionRequest): Promise<{ text: string }> {
+  async complete({ prompt, model, temperature, image }: CompletionRequest): Promise<{ text: string }> {
     const res = await fetch(`${this.baseUrl}/api/generate`, {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
@@ -28,6 +28,7 @@ export class OllamaProvider implements Provider {
         prompt,
         stream: false,
         options: { temperature },
+        ...(image ? { images: [image.data] } : {}),
       }),
     });
 

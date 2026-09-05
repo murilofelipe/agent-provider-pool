@@ -21,7 +21,11 @@ export class GroqProvider implements Provider {
     this.baseUrl = options.baseUrl ?? 'https://api.groq.com/openai/v1';
   }
 
-  async complete({ prompt, model, temperature }: CompletionRequest): Promise<{ text: string }> {
+  async complete({ prompt, model, temperature, image }: CompletionRequest): Promise<{ text: string }> {
+    // ponytail: no vision-capable Groq model is wired up yet -- fail loud
+    // and specific rather than silently sending only the text half.
+    if (image) throw new Error(`GroqProvider does not support image input (model ${model})`);
+
     const res = await fetch(`${this.baseUrl}/chat/completions`, {
       method: 'POST',
       headers: {

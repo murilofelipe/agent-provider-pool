@@ -21,7 +21,14 @@ export class OpenAIProvider implements Provider {
     this.baseUrl = options.baseUrl ?? 'https://api.openai.com/v1';
   }
 
-  async complete({ prompt, model, temperature }: CompletionRequest): Promise<{ text: string }> {
+  async complete({ prompt, model, temperature, image }: CompletionRequest): Promise<{ text: string }> {
+    const content: unknown = image
+      ? [
+          { type: 'text', text: prompt },
+          { type: 'image_url', image_url: { url: `data:${image.mimeType};base64,${image.data}` } },
+        ]
+      : prompt;
+
     const res = await fetch(`${this.baseUrl}/chat/completions`, {
       method: 'POST',
       headers: {
@@ -31,7 +38,7 @@ export class OpenAIProvider implements Provider {
       body: JSON.stringify({
         model,
         temperature,
-        messages: [{ role: 'user', content: prompt }],
+        messages: [{ role: 'user', content }],
       }),
     });
 
