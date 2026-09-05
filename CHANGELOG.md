@@ -3,6 +3,17 @@
 All notable changes to this project are documented here. Format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.3.0] - 2026-09-05
+
+### Fixed
+
+- `dist/` is gitignored, so installing this package via a GitHub tarball
+  URL or `git+` dependency (the only options before this is published to
+  npm) downloaded only the source and left `main`/`exports` pointing at a
+  `dist/` that didn't exist. Added `scripts.prepare`, which npm runs
+  automatically for git-referenced dependencies, so `dist/` now gets
+  built as part of the install.
+
 ## [0.2.0] - 2026-09-05
 
 ### Added

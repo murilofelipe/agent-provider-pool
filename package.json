@@ -1,6 +1,6 @@
 {
   "name": "agent-provider-pool",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Embeddable LLM provider pool with quota-aware automatic failover across a simple-to-complex model ladder per provider.",
   "type": "module",
   "license": "MIT",
@@ -19,6 +19,7 @@
     "dist"
   ],
   "scripts": {
+    "prepare": "npm run build",
     "build": "tsc -p tsconfig.json",
     "type-check": "tsc --noEmit",
     "test": "vitest run",
