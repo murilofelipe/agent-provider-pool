@@ -62,7 +62,7 @@ modo servidor. Spec completa: [issue #1](https://github.com/murilofelipe/agent-p
 
 ### 🎫 Story 1.3: Bootstrap do repositório ✅ [CONCLUÍDA]
 - **Descrição:** `package.json`/`tsconfig.json`/ESLint/Vitest, `LICENSE`
-  (MIT), `README.md` (inglês) + `README.pt-BR.md`, `BACKLOG.md` (este
+  (MIT), `README.md` (pt-BR) + `README.en.md` (inglês), `BACKLOG.md` (este
   arquivo), git hooks locais (`make hooks`, pre-push roda lint+type-check+
   testes unitários).
 - **Não-Objetivos:** **sem GitHub Actions** — decisão explícita do dono
