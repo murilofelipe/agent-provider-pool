@@ -1,15 +1,15 @@
 # agent-provider-pool
 
-[🇧🇷 Português](./README.pt-BR.md)
+[🇺🇸 English](./README.en.md)
 
-An embeddable LLM provider pool with **quota-aware automatic failover**.
+Um pool embutível de provedores de LLM com **failover automático sensível a cota**.
 
-Configure each provider once — an API key and a ladder of models from
-simplest to most capable, each with its own temperature. Call
-`pool.complete(prompt)`. When the active model's quota runs out, the pool
-escalates: first to the next model in the *same* provider's ladder, then to
-the next provider, entirely on its own. Quota usage persists locally, so a
-process restart doesn't forget what's already been spent today.
+Configure cada provider uma vez — uma API key e uma escada de modelos do
+mais simples ao mais capaz, cada um com seu próprio `temperature`. Chame
+`pool.complete(prompt)`. Quando a cota do modelo ativo se esgota, o pool
+escalona sozinho: primeiro pro próximo modelo da escada do MESMO provider,
+depois pro próximo provider. O uso de cota persiste localmente, então um
+restart do processo não "esquece" o que já foi gasto hoje.
 
 ```ts
 import { ProviderPool, GroqProvider, GeminiProvider, OllamaProvider } from 'agent-provider-pool';
@@ -31,85 +31,86 @@ const pool = new ProviderPool()
   .addProvider({
     name: 'ollama',
     provider: new OllamaProvider(),
-    models: [{ model: 'llama3.2', temperature: 0.5 }], // no limit -- local
+    models: [{ model: 'llama3.2', temperature: 0.5 }], // sem limite -- local
   });
 
-const result = await pool.complete('Extract the exercise name, sets, reps and weight from this line.');
+const result = await pool.complete('Extraia o exercício, séries, repetições e carga desta linha.');
 console.log(result.text, result.provider, result.model);
 ```
 
-### Vision (image input)
+### Visão (entrada de imagem)
 
-Pass an `image` as the second argument — Gemini, OpenAI, Anthropic, and
-Ollama (with a vision-capable model, e.g. `llava`) all support it. Groq and
-DeepSeek don't have a vision-capable model configured yet and throw a plain
-`Error` (not `QuotaExceededError`, so the pool never escalates past a
-provider that simply can't do the job) if you send them an image.
+Passe uma `image` como segundo argumento — Gemini, OpenAI, Anthropic e
+Ollama (com modelo com visão, ex. `llava`) suportam. Groq e DeepSeek ainda
+não têm modelo com visão configurado e lançam um `Error` simples (não
+`QuotaExceededError`, então o pool nunca escalona pra frente de um provider
+que simplesmente não sabe fazer o trabalho) se você mandar uma imagem.
 
 ```ts
-const result = await pool.complete('What exercises are listed in this photo?', {
-  image: { data: base64EncodedImage, mimeType: 'image/png' },
+const result = await pool.complete('Quais exercícios aparecem nesta foto?', {
+  image: { data: imagemEmBase64, mimeType: 'image/png' },
 });
 ```
 
-## Why
+## Por quê
 
-Free-tier LLM API quotas are small, inconsistent across providers, and easy
-to exhaust mid-session — every call then fails until you notice and manually
-switch. This library is a bring-your-own-key alternative to hosted routers
-(OpenRouter's Auto Router) or cost/latency-only routers (LiteLLM Router,
-Portkey Gateway): it tracks quota per (provider, model) **proactively**
-(against a configured daily/monthly limit, so it never wastes a call it
-already knows would fail) **and reactively** (catching a real 429/quota
-error, in case the configured number was wrong), and always exhausts a
-provider's own model ladder before moving to the next provider.
+Cota de free tier de LLM é pequena, inconsistente entre provedores, e fácil
+de esgotar no meio de uma sessão — toda chamada seguinte falha até alguém
+perceber e trocar manualmente. Esta biblioteca é uma alternativa
+"bring-your-own-key" a roteadores hospedados (Auto Router da OpenRouter) ou
+a roteadores só de custo/latência (Router do LiteLLM, Portkey Gateway): ela
+rastreia cota por par (provider, modelo) de forma **proativa** (contra um
+limite diário/mensal configurado, pra nunca gastar uma chamada que já sabe
+que vai falhar) **e reativa** (capturando um erro real de 429/cota, caso o
+número configurado estivesse errado), e sempre esgota a escada de modelos
+de um provider antes de passar pro próximo.
 
-## What this is *not*
+## O que isto NÃO é
 
-- **Not a task classifier.** The pool never inspects prompt content to
-  decide which provider is "better" at a task — it always tries providers
-  in the order you registered them. Task-aware routing is a deliberately
-  separate, future concern.
-- **Not a hosted service.** This is an embedded library (`import`), not an
-  HTTP server. No admin UI, no config file parsing — configuration is code,
-  via the builder shown above.
+- **Não é um classificador de tarefa.** O pool nunca olha o conteúdo do
+  prompt pra decidir qual provider é "melhor" pra aquilo — ele sempre
+  tenta os providers na ordem em que você os registrou. Roteamento
+  consciente de tarefa é uma preocupação futura, deliberadamente separada.
+- **Não é um serviço hospedado.** É uma biblioteca embutida (`import`), não
+  um servidor HTTP. Sem UI de admin, sem parsing de arquivo de config —
+  configuração é código, via o builder acima.
 
 ## Providers
 
-| Provider | Adapter | Notes |
+| Provider | Adapter | Observação |
 |---|---|---|
-| [Groq](https://groq.com) | `GroqProvider` | OpenAI-compatible chat completions API |
+| [Groq](https://groq.com) | `GroqProvider` | API de chat completions compatível com OpenAI |
 | [Gemini](https://ai.google.dev) | `GeminiProvider` | Google Generative Language API |
-| [Ollama](https://ollama.com) | `OllamaProvider` | Local server, no API key, no quota |
-| [OpenAI](https://platform.openai.com) | `OpenAIProvider` | Chat Completions API |
+| [Ollama](https://ollama.com) | `OllamaProvider` | Servidor local, sem API key, sem cota |
+| [OpenAI](https://platform.openai.com) | `OpenAIProvider` | API de Chat Completions |
 | [Anthropic](https://www.anthropic.com) | `AnthropicProvider` | Messages API |
-| [DeepSeek](https://www.deepseek.com) | `DeepSeekProvider` | OpenAI-compatible chat completions API |
+| [DeepSeek](https://www.deepseek.com) | `DeepSeekProvider` | API de chat completions compatível com OpenAI |
 
-## Testing your own code against this library
+## Testando seu próprio código contra esta biblioteca
 
-`FakeProvider` ships with the package — a test double that never makes a
-real network call:
+`FakeProvider` já vem no pacote — um dublê de teste que nunca faz chamada
+de rede real:
 
 ```ts
 import { ProviderPool, FakeProvider } from 'agent-provider-pool';
 
-const fake = new FakeProvider({ 'my-model': { type: 'quota-exceeded' } });
+const fake = new FakeProvider({ 'meu-modelo': { type: 'quota-exceeded' } });
 const pool = new ProviderPool({ quotaStorePath: '.test-quota.json' })
-  .addProvider({ name: 'test', provider: fake, models: [{ model: 'my-model', temperature: 0 }] });
+  .addProvider({ name: 'teste', provider: fake, models: [{ model: 'meu-modelo', temperature: 0 }] });
 ```
 
-## Development
+## Desenvolvimento
 
 ```bash
 npm install
-make hooks   # activates the local git pre-push gate (lint + type-check + unit tests)
-make check   # run that same gate manually
-make test-integration   # opt-in only: hits real provider APIs, needs real keys/a local Ollama server
+make hooks   # ativa o guard local de pre-push (lint + type-check + testes unitários)
+make check   # roda o mesmo guard manualmente
+make test-integration   # opt-in, bate API real -- precisa de chaves reais/Ollama local
 ```
 
-There is deliberately **no GitHub Actions workflow** in this repository —
-quality checks run locally, on push, via a git hook.
+Este repositório **não tem workflow de GitHub Actions de propósito** — as
+checagens de qualidade rodam só localmente, no push, via git hook.
 
-## License
+## Licença
 
 MIT
